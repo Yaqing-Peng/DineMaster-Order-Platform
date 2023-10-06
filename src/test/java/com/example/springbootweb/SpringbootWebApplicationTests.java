@@ -1,13 +1,13 @@
-package com.example.springbbotweb;
+package com.example.springbootweb;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringbbotWebApplicationTests {
+class SpringbootWebApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
