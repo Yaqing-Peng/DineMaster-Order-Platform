@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jasmine.mapper.MenuMapper">
+  <resultMap id="BaseResultMap" type="com.jasmine.pojo.Menu">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="dish_name" jdbcType="VARCHAR" property="dishName" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="picture" jdbcType="VARCHAR" property="picture" />
+    <result column="cook_time" jdbcType="TINYINT" property="cookTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_menu
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.jasmine.pojo.Menu">
+    insert into tb_menu (id, dish_name, description, 
+      price, picture, cook_time, 
+      status, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{dishName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DOUBLE}, #{picture,jdbcType=VARCHAR}, #{cookTime,jdbcType=TINYINT}, 
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.jasmine.pojo.Menu">
+    update tb_menu
+    set dish_name = #{dishName,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      picture = #{picture,jdbcType=VARCHAR},
+      cook_time = #{cookTime,jdbcType=TINYINT},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, dish_name, description, price, picture, cook_time, status, create_time, 
+    update_time
+    from tb_menu
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, dish_name, description, price, picture, cook_time, status, create_time, 
+    update_time
+    from tb_menu
+  </select>
+</mapper>
