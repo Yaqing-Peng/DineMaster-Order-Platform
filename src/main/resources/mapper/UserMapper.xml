@@ -28,13 +28,15 @@
 
   <update id="updateByPrimaryKey" parameterType="com.jasmine.pojo.User">
     update tb_user
-    set name = #{name,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=TINYINT},
-      birthday = #{birthday,jdbcType=DATE},
-      phone = #{phone,jdbcType=CHAR},
-      status = #{status,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    <set>
+      <if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+      <if test="gender != null">gender = #{gender,jdbcType=TINYINT},</if>
+      <if test="birthday != null">birthday = #{birthday,jdbcType=DATE},</if>
+      <if test="phone != null">phone = #{phone,jdbcType=CHAR},</if>
+      <if test="status != null">status = #{status,jdbcType=INTEGER},</if>
+      <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+      <if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP}</if>
+    </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
 
