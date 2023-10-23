@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Menu {
+public class Dish {
     private Integer id;
 
     private String dishName;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jasmine.mapper.MenuMapper">
-  <resultMap id="BaseResultMap" type="com.jasmine.pojo.Menu">
+<mapper namespace="com.jasmine.mapper.DishMapper">
+  <resultMap id="BaseResultMap" type="com.jasmine.pojo.Dish">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="dish_name" jdbcType="VARCHAR" property="dishName" />
     <result column="description" jdbcType="VARCHAR" property="description" />
@@ -18,7 +18,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
-  <insert id="insert" parameterType="com.jasmine.pojo.Menu">
+  <insert id="insert" parameterType="com.jasmine.pojo.Dish">
     insert into tb_menu (id, dish_name, description, 
       price, picture, cook_time, 
       status, create_time, update_time
@@ -29,16 +29,18 @@
       )
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="com.jasmine.pojo.Menu">
+  <update id="updateByPrimaryKey" parameterType="com.jasmine.pojo.Dish">
     update tb_menu
-    set dish_name = #{dishName,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DOUBLE},
-      picture = #{picture,jdbcType=VARCHAR},
-      cook_time = #{cookTime,jdbcType=TINYINT},
-      status = #{status,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    <set>
+      <if test="dishName != null">dish_name = #{dishName,jdbcType=VARCHAR},</if>
+      <if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+      <if test="price != null">price = #{price,jdbcType=DOUBLE},</if>
+      <if test="picture != null">picture = #{picture,jdbcType=VARCHAR},</if>
+      <if test="cookTime != null">cook_time = #{cookTime,jdbcType=TINYINT},</if>
+      <if test="status != null">status = #{status,jdbcType=INTEGER},</if>
+      <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
+      update_time = NOW() <!-- Always set update_time to the current timestamp -->
+    </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
 
