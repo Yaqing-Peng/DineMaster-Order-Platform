@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!-- import application.properties -->
+    <properties resource="application.properties"/>
+
+    <!-- one database one context,elements must follow the order:
+        property*,plugin*,commentGenerator?,jdbcConnection,javaTypeResolver?,
+        javaModelGenerator,sqlMapGenerator?,javaClientGenerator?,table+
+    -->
+    <context id="myContext" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+
+        <!-- comment -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+
+        <!-- jdbc -->
+        <jdbcConnection driverClass="${spring.datasource.driverClassName}"
+                        connectionURL="${spring.datasource.url}"
+                        userId="${spring.datasource.username}"
+                        password="${spring.datasource.password}">
+            <property name="nullCatalogMeansCurrent" value="true"/>
+        </jdbcConnection>
+
+        <!-- type convert -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="true"/>
+        </javaTypeResolver>
+
+        <!-- generate entity -->
+        <javaModelGenerator targetPackage="com.jasmine.pojo" targetProject="src/main/java">
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+
+        <!-- generate Mapper.xml -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+        </sqlMapGenerator>
+
+        <!-- generate XxxMapper.java interface-->
+        <javaClientGenerator targetPackage="com.jasmine.mapper" targetProject="src/main/java" type="XMLMAPPER">
+        </javaClientGenerator>
+
+
+        <!-- schema is database name，oracle need to configure，mysql don't
+             tableName
+             domainObjectName: entity class name
+             enableXXXByExample defaulted as true
+             -->
+        <table schema="" tableName="tb_user" domainObjectName="User"
+               enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false" selectByExampleQueryId="false">
+        </table>
+        <table schema="" tableName="tb_menu" domainObjectName="Menu"
+               enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false" selectByExampleQueryId="false">
+        </table>
+        <table schema="" tableName="tb_order" domainObjectName="Order"
+               enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false" selectByExampleQueryId="false">
+            <!--use actual column name, defaulted as false-->
+            <!--<property name="useActualColumnNames" value="false" />-->
+        </table>
+    </context>
+</generatorConfiguration>
