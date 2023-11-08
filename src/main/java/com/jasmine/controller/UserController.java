@@ -3,7 +3,6 @@ package com.jasmine.controller;
 import com.jasmine.entity.Result;
 import com.jasmine.pojo.User;
 import com.jasmine.service.UserService;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
