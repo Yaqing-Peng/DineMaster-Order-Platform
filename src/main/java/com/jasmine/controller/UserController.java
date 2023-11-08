@@ -3,8 +3,11 @@ package com.jasmine.controller;
 import com.jasmine.entity.Result;
 import com.jasmine.pojo.User;
 import com.jasmine.service.UserService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +19,48 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    /*Redis cache*/
+
+    //add one user
+    @PostMapping("/set")
+    public Result setKey(@RequestBody User user) {
+        log.info("add user to redis, user info:{}", user);
+        redisTemplate.opsForValue().set("user", user);
+        log.info("successfully added user to redis");
+        return Result.success();
+    }
+
+    //add a list of users
+    @PostMapping("/setList")
+    public Result setList(@RequestBody User user) {
+        log.info("add user to redis, user info:{}", user);
+        ListOperations<String, User> listOperations = redisTemplate.opsForList();
+        listOperations.leftPush("users", user);
+        List<User> list = listOperations.range("users", 0, 5);
+        return Result.success(list);
+    }
+
+    //get user by redis key
+    @GetMapping("/get/{key}")
+    public Result getByKey(@PathVariable String key) {
+        User user = (User) redisTemplate.opsForValue().get(key);
+        log.info("get user from redis, user info:{}", user);
+        return Result.success(user);
+    }
+
+    //delete user by redis key
+    @DeleteMapping("/delete/{key}")
+    public Result deleteByKey(@PathVariable String key) {
+        redisTemplate.delete(key);
+        log.info("delete user from redis, key:{}", key);
+        boolean res = redisTemplate.hasKey(key);
+        return Result.success(res);
+    }
+
+    /*MySql data*/
 
     @GetMapping
     public Result getAll(){
