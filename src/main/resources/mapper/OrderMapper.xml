@@ -15,7 +15,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
-  <insert id="insert" parameterType="com.jasmine.pojo.Order">
+  <insert id="insert" parameterType="com.jasmine.pojo.Order" useGeneratedKeys="true" keyProperty="id">
     insert into tb_order (id, user_id, dish_id, 
       status, create_time, update_time
       )
@@ -31,7 +31,7 @@
       <if test="dishId != null">dish_id = #{dishId,jdbcType=INTEGER},</if>
       <if test="status != null">status = #{status,jdbcType=INTEGER},</if>
       <if test="createTime != null">create_time = #{createTime,jdbcType=TIMESTAMP},</if>
-      update_time = NOW() <!-- Always set update_time to the current timestamp -->
+      <if test="updateTime != null">update_time = #{updateTime,jdbcType=TIMESTAMP},</if>
     </set>
     WHERE id = #{id,jdbcType=INTEGER}
   </update>
@@ -45,5 +45,11 @@
   <select id="selectAll" resultMap="BaseResultMap">
     select id, user_id, dish_id, status, create_time, update_time
     from tb_order
+  </select>
+
+  <select id="selectByUpdateDate" parameterType="java.util.Date" resultMap="BaseResultMap">
+    select id, user_id, dish_id, status, create_time, update_time
+    from tb_order
+    where update_time between #{date,jdbcType=TIMESTAMP} - INTERVAL '24' HOUR and #{date,jdbcType=TIMESTAMP}
   </select>
 </mapper>

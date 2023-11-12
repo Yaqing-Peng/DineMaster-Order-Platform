@@ -13,5 +13,5 @@ server:
   port: 9090
 mybatis:
   mapper-locations: classpath:**/mapper/*.xml
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

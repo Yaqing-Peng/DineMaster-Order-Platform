@@ -1,5 +1,6 @@
 package com.jasmine.service.impl;
 
+import com.jasmine.constants.RedisKeyPrefix;
 import com.jasmine.mapper.UserMapper;
 import com.jasmine.pojo.User;
 import com.jasmine.service.UserService;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
+
 
 @Slf4j
 @Service
@@ -18,78 +19,58 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, User> redisTemplate;
     
     @Override
-    @Transactional
     public int add(User user) {
         user.setCreateTime(new Date());
         user.setUpdateTime(new Date());
-        int insert = userMapper.insert(user);
-        if(insert == 1){
-            String key = String.valueOf(user.getId());
-            redisTemplate.opsForValue().set(key, user);
-            Boolean isKeyExists = redisTemplate.hasKey(key);
-            if(!isKeyExists){
-                log.info("fail to add user to redis, user: {}", user);
-                throw new RuntimeException("Failed to add user to Redis");
-            }
-        }
-        return insert;
+        return userMapper.insert(user);
     }
 
     @Override
     @Transactional
     public int delete(Integer id) {
-        int i = userMapper.deleteByPrimaryKey(id);
-        if(i == 1){
-            String key = String.valueOf(id);
+        int res = userMapper.deleteByPrimaryKey(id);
+        if(res == 1){
+            String key = RedisKeyPrefix.userPrefix + id;
             Boolean isKeyExists = redisTemplate.hasKey(key);
-            if(isKeyExists){
+            if(Boolean.TRUE.equals(isKeyExists)){
                 Boolean deleted = redisTemplate.delete(key);
-                if(!deleted){
+                if(Boolean.FALSE.equals(deleted)){
                     log.error("Failed to delete user from Redis, user ID: {}", id);
                     throw new RuntimeException("Failed to delete user from Redis");
                 }
             }
         }
-        return i;
+        return res;
     }
 
     @Override
-    @Transactional
-    public User select(Integer id) {
-        String key = String.valueOf(id);
-        User user = (User) redisTemplate.opsForValue().get(key);
-        if(user == null){
-            user = userMapper.selectByPrimaryKey(id);
-            if(user != null){
-                redisTemplate.opsForValue().set(key,user);
-            }
-        }
-        return user;
+    public int update(User user) {
+        user.setUpdateTime(new Date());
+        log.info("update user in mysql, user:{}", user);
+        return userMapper.updateByPrimaryKey(user);
     }
 
     @Override
     public List<User> selectAll() {
-
         return userMapper.selectAll();
     }
 
     @Override
     @Transactional
-    public int update(User user) {
-        user.setUpdateTime(new Date());
-        int i = userMapper.updateByPrimaryKey(user);
-        if(i == 1){
-            String key = String.valueOf(user.getId());
-            redisTemplate.opsForValue().set(key, user);
-            User redisUser = (User) redisTemplate.opsForValue().get(key);
-            if(redisUser == null && !Objects.equals(redisUser, user)){
-                log.error("Data inconsistency between Redis and database for user ID: {}", user.getId());
-                throw new RuntimeException("Data inconsistency between Redis and database");
+    public User select(Integer id) {
+        String key =  RedisKeyPrefix.userPrefix + id;
+        User user = redisTemplate.opsForValue().get(key);
+        log.info("select user from redis, user name:{}", id);
+        if(user == null){
+            user = userMapper.selectByPrimaryKey(id);
+            log.info("user is not in redis, select from mysql, user name:{}", id);
+            if(user != null){
+                redisTemplate.opsForValue().set(key,user);
             }
         }
-        return i;
+        return user;
     }
 }

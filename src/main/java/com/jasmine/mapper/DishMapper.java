@@ -1,8 +1,10 @@
 package com.jasmine.mapper;
 
 import com.jasmine.pojo.Dish;
+import com.jasmine.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -16,4 +18,5 @@ public interface DishMapper {
     List<Dish> selectAll();
 
     int updateByPrimaryKey(Dish record);
+
 }
