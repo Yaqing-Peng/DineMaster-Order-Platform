@@ -18,7 +18,7 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
-  <insert id="insert" parameterType="com.jasmine.pojo.Dish">
+  <insert id="insert" parameterType="com.jasmine.pojo.Dish" useGeneratedKeys="true" keyProperty="id">
     insert into tb_menu (id, dish_name, description, 
       price, picture, cook_time, 
       status, create_time, update_time

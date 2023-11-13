@@ -5,7 +5,7 @@
 
 <generatorConfiguration>
     <!-- import application.properties -->
-    <properties resource="application.properties"/>
+    <properties resource="application.yml"/>
 
     <!-- one database one context,elements must follow the order:
         property*,plugin*,commentGenerator?,jdbcConnection,javaTypeResolver?,
